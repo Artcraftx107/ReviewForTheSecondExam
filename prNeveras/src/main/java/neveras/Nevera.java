@@ -1,9 +1,7 @@
 package neveras;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Nevera {
@@ -16,6 +14,7 @@ public class Nevera {
             throw new IllegalArgumentException("la capacidad de la nevera no puede ser negativa");
         }else{
             this.capacidad=cap;
+            this.productos=new HashMap<>();
         }
     }
     public Nevera(double cap, String file) throws IOException {
@@ -68,6 +67,7 @@ public class Nevera {
                 totalPeso+=entry.getValue();
             }
         }
+        this.ocupacion=totalPeso;
         return totalPeso;
     }
 
@@ -75,9 +75,72 @@ public class Nevera {
         if(c.isEmpty()||n.isEmpty()||f==null||p<0){
             throw new IllegalArgumentException("Los argumentos introducidos son invalidos");
         }else{
-            
+            Producto sergiBruh = new Producto(c, n, f);
+            if(productos.isEmpty()||!productos.containsKey(sergiBruh)){
+                if(this.ocupacion+p>this.capacidad){
+                    double epicMonkey = this.capacidad-this.ocupacion;
+                    productos.put(sergiBruh, epicMonkey);
+                }else{
+                    productos.put(sergiBruh, p);
+                    this.ocupacion+=p;
+                }
+            }else{
+                if(this.ocupacion+p>this.capacidad){
+                    double farded = this.capacidad-this.ocupacion;
+                    productos.replace(sergiBruh, productos.get(sergiBruh).doubleValue(), farded+productos.get(sergiBruh).doubleValue());
+                    this.ocupacion+=farded;
+                }else{
+                    productos.replace(sergiBruh, productos.get(sergiBruh).doubleValue(),p+productos.get(sergiBruh).doubleValue());
+                    this.ocupacion+=p;
+                }
+            }
         }
     }
 
+    public void saca(String c, Fecha f, double p){
+        if(p<0){
+            throw new IllegalArgumentException("El valor indicado no es correcto ("+p+")");
+        }
+        for(Map.Entry<Producto, Double> entry : productos.entrySet()){
+            Producto obsequio = entry.getKey();
+            if(obsequio.getCodigo().equalsIgnoreCase(c)&&obsequio.getFechaCaducidad().equals(f)){
+                if(productos.get(obsequio).doubleValue()-p <0){
+                    throw new IllegalArgumentException("El valor resultante de sacar el peso p no es valido");
+                } else if (productos.get(obsequio).doubleValue()-p==0) {
+                    productos.remove(obsequio);
+                    if(productos.isEmpty()){
+                        throw new IllegalArgumentException("La nevera no puede estar vacia");
+                    }
+                }else{
+                    productos.replace(obsequio, productos.get(obsequio).doubleValue(), productos.get(obsequio).doubleValue()-p);
+                    this.ocupacion-=p;
+                }
+            }
+        }
+    }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ocupacion).append(" / ").append(capacidad).append(": [");
+
+        for (Map.Entry<Producto, Double> entry : productos.entrySet()) {
+            Producto producto = entry.getKey();
+            Double peso = entry.getValue();
+
+            sb.append("[")
+                    .append(producto.toString())
+                    .append(" (")
+                    .append(peso)
+                    .append(")], ");
+        }
+
+        // Quita la ultima coma y el espacio
+        if (!productos.isEmpty()) {
+            sb.delete(sb.length() - 2, sb.length());
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
 }
