@@ -30,19 +30,19 @@ public class GestionPlayas {
             for (String s : bg3) {
                 String[] data = s.split(";");
                 if (data.length != 5) {
-                    System.err.println("Faltan datos para crear una playa");
+                    throw new PlayaException("Faltan datos para crear una playa");
                 } else {
                     try {
                         double latitud = Double.parseDouble(data[2]);
                         double longitud = Double.parseDouble(data[3]);
                         int aforo = Integer.parseInt(data[4]);
                         if (aforo < 0) {
-                            System.err.println("ERROR: Aforo negativo");
+                            throw new PlayaException("ERROR: Aforo negativo");
                         }
                         Playa aux = new Playa(data[0], data[1], latitud, longitud, aforo);
                         incluye(aux);
                     } catch (NumberFormatException e) {
-                        System.err.println("ERROR: Valor no numerico");
+                        throw new PlayaException("ERROR: Valor no numerico");
                     }
                 }
             }
@@ -51,46 +51,48 @@ public class GestionPlayas {
 
     public void incluye(Playa aux) {
         int pos = posicion(aux);
-        if(pos!=-1) {
-           playas[pos]=aux;
-        }else{
+        if (pos != -1) {
+            playas[pos] = aux;
+        } else {
             if (numPlayas == CAP_INICIAL) {
                 CAP_INICIAL *= 2;
-                Playa[] bruh = new Playa[CAP_INICIAL];
-                if (numPlayas >= 0) System.arraycopy(playas, 0, bruh, 0, numPlayas);
-                this.playas = bruh;
             }
+            Playa[] bruh = new Playa[CAP_INICIAL];
+            if (numPlayas >= 0) System.arraycopy(playas, 0, bruh, 0, numPlayas);
+            this.playas = bruh;
             playas[numPlayas++] = aux;
-            numPlayas++;
         }
     }
 
     private int posicion(Playa aux) {
-        boolean found = false;
-        int pos = 0;
-        while(pos<numPlayas&&!found){
+        for (int pos = 0; pos < numPlayas; pos++) {
             if (playas[pos] != null && playas[pos].equals(aux)) {
-                found = true;
-            } else {
-                pos++;
+                return pos;
             }
         }
-        if(!found){
-            pos=-1;
-        }
-        return pos;
+        return -1;
     }
 
-    private Playa buscar(double lati, double longi){
+    private Playa buscar(double lati, double longi) {
         Playa aux = new Playa("Aux", "Aux", lati, longi, 0);
         int pos = posicion(aux);
-        if(pos!=-1){
-            aux=playas[pos];
-        }else{
-            throw new PlayaException("La playa buscada no esta en el array");
+        if (pos != -1) {
+            aux = playas[pos];
+        } else {
+            // Check if it's a PlayaRestringida
+            for (Playa playa : playas) {
+                if (playa instanceof PlayaRestringida) {
+                    PlayaRestringida pr = (PlayaRestringida) playa;
+                    if (pr.getLatitud() == lati && pr.getLongitud() == longi) {
+                        return pr;
+                    }
+                }
+            }
+            throw new PlayaException("La playa buscada no está en el array");
         }
         return aux;
     }
+
 
     public void registrarOcupacion(String lol) throws IOException {
         try(BufferedReader br = new BufferedReader(new FileReader(lol))){
@@ -98,8 +100,7 @@ public class GestionPlayas {
             while((line = br.readLine())!=null){
                 String[] parts = line.split(";");
                 if(parts.length!=3){
-                    System.err.println("Error: Datos incorrectos en la linea "+line);
-                    continue;
+                    throw new PlayaException("Error: Datos incorrectos en la linea "+line);
                 }
                 try {
                     double latitud = Double.parseDouble(parts[0]);
@@ -109,33 +110,28 @@ public class GestionPlayas {
                     int pos = posicion(aux);
                     playas[pos].setNumPersonas(newPersonas);
                 }catch (NumberFormatException e){
-                    System.err.println("Error al procesar la linea "+line);
+                    throw new PlayaException("Error al procesar la linea "+line);
                 }
             }
         }
     }
 
     public Playa primeraPlayaConEstado(String est){
-        boolean gotten = false;
-        int pos = 0;
-        while(pos<numPlayas&&!gotten){
-            if(est.equalsIgnoreCase(playas[pos].getEstado())&&playas[pos]!=null){
-                gotten = true;
-            }else{
-                pos++;
+        for(int pos = 0; pos < numPlayas; pos++) {
+            if (playas[pos] != null && est.equalsIgnoreCase(playas[pos].getEstado())) {
+                return playas[pos];
             }
         }
-        if(!gotten){
-            throw new PlayaException("No hay ninguna playa con el estado indicado en el array");
-        }
-        return playas[pos];
+        throw new PlayaException("No hay ninguna playa con el estado indicado en el array");
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for(Playa playa : playas){
-            sb.append(playa).append(", ");
+            if(playa != null) {
+                sb.append(playa).append(", ");
+            }
         }
         if(sb.length()>2){
             sb.setLength(sb.length()-2);
@@ -143,3 +139,4 @@ public class GestionPlayas {
         return this.provincia+" Playas: ["+sb+"]";
     }
 }
+

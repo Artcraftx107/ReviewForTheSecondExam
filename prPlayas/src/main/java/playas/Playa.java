@@ -1,5 +1,7 @@
 package playas;
 
+import java.util.Objects;
+
 public class Playa {
     private String name;
     private String location;
@@ -59,11 +61,13 @@ public class Playa {
 
     @Override
     public boolean equals(Object obj) {
-        if(this==obj)return true;
-        if(obj==null||getClass()!=obj.getClass())return false;
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
         Playa playa = (Playa) obj;
-        return playa.latitud==this.latitud&&playa.longitud==this.longitud;
+        return Double.compare(playa.latitud, this.latitud) == 0 &&
+                Double.compare(playa.longitud, this.longitud) == 0;
     }
+
 
     @Override
     public int hashCode() {

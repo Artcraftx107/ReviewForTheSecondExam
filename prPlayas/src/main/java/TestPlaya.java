@@ -27,8 +27,8 @@ public class TestPlaya {
 
         // Test primeraPlayaConEstado method
         try {
-            Playa playaWithState = gestionPlayas.primeraPlayaConEstado("LEVE");
-            System.out.println("Playa with state LEVE: " + playaWithState);
+            Playa playaWithState = gestionPlayas.primeraPlayaConEstado("MODERADO");
+            System.out.println("Playa with state MODERADO: " + playaWithState);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,6 +16,7 @@ public class PlayaRestringida extends Playa{
 
     @Override
     public void setNumPersonas(int numPersonas) {
+        super.setNumPersonas(numPersonas);
         if(numPersonas<0){
             throw new PlayaException("El numero de personas no puede ser negativo");
         }else{
@@ -35,6 +36,6 @@ public class PlayaRestringida extends Playa{
 
     @Override
     public String toString() {
-        return "["+super.toString()+", "+porcentaje+"%]";
+        return "["+super.toString()+", "+this.porcentaje+"%]";
     }
 }
