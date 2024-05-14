@@ -30,19 +30,19 @@ public class GestionPlayas {
             for (String s : bg3) {
                 String[] data = s.split(";");
                 if (data.length != 5) {
-                    throw new PlayaException("Faltan datos para crear una playa");
+                    System.err.println("Faltan datos para crear una playa");
                 } else {
                     try {
                         double latitud = Double.parseDouble(data[2]);
                         double longitud = Double.parseDouble(data[3]);
                         int aforo = Integer.parseInt(data[4]);
                         if (aforo < 0) {
-                            throw new PlayaException("ERROR: Aforo negativo");
+                            System.err.println("ERROR: Aforo negativo");
                         }
                         Playa aux = new Playa(data[0], data[1], latitud, longitud, aforo);
                         incluye(aux);
                     } catch (NumberFormatException e) {
-                        throw new PlayaException("ERROR: Valor no numerico");
+                        System.err.println("ERROR: Valor no numerico");
                     }
                 }
             }
@@ -100,7 +100,7 @@ public class GestionPlayas {
             while((line = br.readLine())!=null){
                 String[] parts = line.split(";");
                 if(parts.length!=3){
-                    throw new PlayaException("Error: Datos incorrectos en la linea "+line);
+                    System.err.println("Error: Datos incorrectos en la linea "+line);
                 }
                 try {
                     double latitud = Double.parseDouble(parts[0]);
@@ -110,7 +110,7 @@ public class GestionPlayas {
                     int pos = posicion(aux);
                     playas[pos].setNumPersonas(newPersonas);
                 }catch (NumberFormatException e){
-                    throw new PlayaException("Error al procesar la linea "+line);
+                    System.err.println("Error al procesar la linea "+line);
                 }
             }
         }

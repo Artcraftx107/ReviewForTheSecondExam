@@ -1,7 +1,5 @@
 package playas;
 
-import java.util.Objects;
-
 public class Playa {
     private String name;
     private String location;
@@ -10,6 +8,7 @@ public class Playa {
     private final int aforoMax;
     private int numPersonas;
     protected String estado;
+
     public Playa(String n, String l, double lati, double longi, int aforoBruh){
         if(n.isEmpty() || l.isEmpty() || aforoBruh<0){
             throw new PlayaException("Uno de los valores especificados no es correcto");
@@ -67,7 +66,6 @@ public class Playa {
         return Double.compare(playa.latitud, this.latitud) == 0 &&
                 Double.compare(playa.longitud, this.longitud) == 0;
     }
-
 
     @Override
     public int hashCode() {
