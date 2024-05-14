@@ -11,7 +11,7 @@ public class MainNeveraInteligente {
         // Adding products to the fridge
         try {
             nevera.mete("A123", "tomate", new Fecha(20, 5, 2020), 200.2);
-            nevera.mete("A124", "lechuga", new Fecha(20, 5, 2020), 150.0);
+            nevera.mete("A124", "carne", new Fecha(20, 5, 2020), 150.0);
             nevera.mete("A124", "lechuga", new Fecha(26, 5, 2020), 180.0);
             nevera.mete("A126", "leche", new Fecha(24, 5, 2020), 1119.8);
             nevera.mete("A126", "maiz", new Fecha(20, 5, 2020), 350.0);

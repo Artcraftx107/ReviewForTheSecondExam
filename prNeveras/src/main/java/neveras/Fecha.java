@@ -2,7 +2,7 @@ package neveras;
 
 import java.util.Objects;
 
-public class Fecha {
+public class Fecha implements Comparable<Fecha>{
     private int dia;
     private int mes;
     private int anyo;
@@ -35,25 +35,14 @@ public class Fecha {
         return this.dia+"/"+this.mes+"/"+this.anyo;
     }
 
-    public int compareTo(Fecha f) {
-        if(this.anyo<f.anyo){
-            return 1;
-        } else if (this.anyo==f.anyo) {
-            if(this.mes<f.mes){
-                return 1;
-            } else if (this.mes==f.mes) {
-                if(this.dia<f.dia){
-                    return 1;
-                } else if (this.dia==f.dia) {
-                    return 0;
-                }else {
-                    return -1;
-                }
-            }else{
-                return -1;
-            }
-        }else{
-            return -1;
+    @Override
+    public int compareTo(Fecha otraFecha) {
+        if (this.anyo != otraFecha.anyo) {
+            return Integer.compare(this.anyo, otraFecha.anyo);
+        } else if (this.mes != otraFecha.mes) {
+            return Integer.compare(this.mes, otraFecha.mes);
+        } else {
+            return Integer.compare(this.dia, otraFecha.dia);
         }
     }
 }

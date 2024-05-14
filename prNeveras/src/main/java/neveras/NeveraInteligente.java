@@ -11,23 +11,15 @@ public class NeveraInteligente extends Nevera{
         super(f, file);
     }
 
-    public SortedMap<Fecha, Set<Producto>> productosConFechaAnterior(Fecha f){
+    public SortedMap<Fecha, Set<Producto>> productosConFechaAnterior(Fecha f) {
         SortedMap<Fecha, Set<Producto>> productosAnteriores = new TreeMap<>();
-
         for (Map.Entry<Producto, Double> entry : productos.entrySet()) {
             Producto producto = entry.getKey();
-            Fecha fechaCaducidad = producto.getFechaCaducidad();
-
-            // Check if the expiration date is before the specified date 'f'
-            if (fechaCaducidad.compareTo(f) < 0) {
-                // Get the set of products with the same expiration date
-                Set<Producto> productosSet = productosAnteriores.getOrDefault(fechaCaducidad, new HashSet<>());
-
-                // Add the current product to the set
-                productosSet.add(producto);
-
-                // Update the map entry with the set of products
-                productosAnteriores.put(fechaCaducidad, productosSet);
+            if (producto.getFechaCaducidad().compareTo(f) < 0) {
+                Fecha fechaCaducidad = producto.getFechaCaducidad();
+                Set<Producto> productosExpirados = productosAnteriores.getOrDefault(fechaCaducidad, new HashSet<>());
+                productosExpirados.add(producto);
+                productosAnteriores.put(fechaCaducidad, productosExpirados);
             }
         }
 
