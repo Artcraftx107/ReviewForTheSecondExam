@@ -13,6 +13,7 @@ public class LaboratoriosTest {
         laboratorios.addSolicitud("POO-A;1;3");
         laboratorios.addSolicitud("POO-B;1;3");
         laboratorios.addSolicitud("POO-A;2;1");
+        laboratorios.addSolicitud("TEC-A;1;3");
         // Add more solicitudes and errors as needed...
 
         // Add some errors for testing
